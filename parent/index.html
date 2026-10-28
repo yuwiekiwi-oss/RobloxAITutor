@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eef3ff" />
+    <title>授業の記録｜ミスタージョーンズ金町校</title>
+    <link rel="icon" href="brand/mj-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Public settings (Supabase URL / anon key / LINE channel ID). Copy config.example.js → config.js -->
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <img class="school-logo" src="brand/mj-logo.png" alt="" width="44" height="44"
+          onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'school-logo fallback',textContent:'MJ'}))" />
+        <div>
+          <p class="school">ミスタージョーンズ<b>金町校</b></p>
+          <h1>授業の記録</h1>
+        </div>
+      </div>
+      <button id="logout" class="link" hidden>ログアウト</button>
+    </header>
+    <main id="app" class="main">
+      <div class="notice">読みこみ中…</div>
+    </main>
+  </body>
+</html>

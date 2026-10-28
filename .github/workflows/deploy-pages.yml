@@ -1,0 +1,60 @@
+name: Deploy web to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          # Repository → Settings → Secrets and variables → Actions → Variables
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_LOGIN_DOMAIN: ${{ vars.VITE_LOGIN_DOMAIN || 'juku.local' }}
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      # The parent page is a separate plain-HTML app, published under /parent/
+      - name: Add parent page
+        run: |
+          mkdir -p web/dist/parent
+          cp parent/index.html parent/app.js parent/demo.js parent/style.css web/dist/parent/
+          cp -r web/public/brand web/dist/parent/brand
+          cat > web/dist/parent/config.js <<EOF
+          window.APP_CONFIG = {
+            supabaseUrl: "${{ vars.VITE_SUPABASE_URL }}",
+            supabaseAnonKey: "${{ vars.VITE_SUPABASE_ANON_KEY }}",
+            lineChannelId: "${{ vars.LINE_CHANNEL_ID }}",
+          };
+          EOF
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

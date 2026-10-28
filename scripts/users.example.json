@@ -1,0 +1,13 @@
+{
+  "teachers": [
+    { "login": "sensei", "name": "山田先生" }
+  ],
+  "students": [
+    { "login": "tanaka", "name": "田中", "teacher": "sensei" },
+    { "login": "sato", "name": "佐藤", "teacher": "sensei" },
+    { "login": "suzuki", "name": "鈴木", "teacher": "sensei" }
+  ],
+  "parents": [
+    { "login": "tanaka-family", "name": "田中（保護者）", "children": ["tanaka"] }
+  ]
+}
