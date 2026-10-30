@@ -5,6 +5,7 @@ import { type Classroom, useApi } from "../../lib/api";
 import { formatClock, relativeTime } from "../../lib/time";
 import type { Profile } from "../../lib/types";
 import { computeStatus, LEVEL_ORDER, type StatusLevel, summarizeActivity } from "./statusRules";
+import { AccountsPanel } from "./AccountsPanel";
 import { StudentDetail } from "./StudentDetail";
 import { stageLabel } from "../student/project/stages";
 import "./teacher.css";
@@ -70,6 +71,7 @@ export function TeacherDashboard({ profile, onSignOut }: { profile: Profile; onS
   const [now, setNow] = useState(Date.now());
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showAccounts, setShowAccounts] = useState(false);
   const [bulk, setBulk] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -138,6 +140,10 @@ export function TeacherDashboard({ profile, onSignOut }: { profile: Profile; onS
           </span>
           <button className="t-btn" onClick={load} aria-label="今すぐ更新">
             <Icon name="refresh" size={16} />
+          </button>
+          <button className="t-btn" onClick={() => setShowAccounts(true)}>
+            <Icon name="key" size={16} />
+            アカウント
           </button>
           <button className="t-btn t-btn-danger" disabled={active.length === 0 || bulkRunning} onClick={endAll}>
             <Icon name="flag" size={16} />
@@ -266,6 +272,7 @@ export function TeacherDashboard({ profile, onSignOut }: { profile: Profile; onS
       </main>
 
       {selected && <StudentDetail row={selected} onClose={() => setSelectedId(null)} onChanged={load} />}
+      {showAccounts && <AccountsPanel onClose={() => setShowAccounts(false)} />}
     </div>
   );
 }

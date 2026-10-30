@@ -1,6 +1,6 @@
 {
   "teachers": [
-    { "login": "sensei", "name": "山田先生" }
+    { "login": "sensei", "name": "山田先生", "admin": true }
   ],
   "students": [
     { "login": "tanaka", "name": "田中", "teacher": "sensei" },

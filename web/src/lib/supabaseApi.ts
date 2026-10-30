@@ -9,6 +9,7 @@ import type {
   ProjectRow,
   ProjectWithBlocks,
   SavedTree,
+  AccountsList,
   StudentConceptRow,
   WriteResult,
   TweakResult,
@@ -301,6 +302,13 @@ export const supabaseApi: Api = {
     const { data, error } = await supabase.rpc("save_tree", { p_tree: tree, p_place: place });
     if (error) fail(error, "構成を保存できませんでした。");
     return data as SavedTree;
+  },
+  listAccounts: () => invoke<AccountsList>("accounts", { action: "list" }),
+  async setPassword(userId, password) {
+    await invoke("accounts", { action: "set_password", userId, password });
+  },
+  async setAdmin(userId, isAdmin) {
+    await invoke("accounts", { action: "set_admin", userId, isAdmin });
   },
   async deleteSavedTree(id) {
     const { error } = await supabase.from("student_trees").delete().eq("id", id);

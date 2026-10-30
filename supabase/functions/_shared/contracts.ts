@@ -337,3 +337,29 @@ export type GateResult = {
   answer_index: number | null;
   explanation: string | null;
 };
+
+// ---------------------------------------------------------------------------
+// Account management (teacher dashboard → Edge Function `accounts`)
+// ---------------------------------------------------------------------------
+
+export type AccountRow = {
+  id: string;
+  role: "teacher" | "student";
+  display_name: string;
+  /** What the person types to log in (the e-mail without the school's login domain). */
+  login_id: string;
+  is_admin: boolean;
+  /** For students: the teacher in charge. */
+  teacher_name: string | null;
+  is_self: boolean;
+};
+
+export type AccountsRequest =
+  | { action: "list" }
+  | { action: "set_password"; userId: string; password: string }
+  | { action: "set_admin"; userId: string; isAdmin: boolean };
+
+export type AccountsList = { accounts: AccountRow[]; isAdmin: boolean };
+
+/** Shortest password accepted when a teacher sets one. */
+export const PASSWORD_MIN = 6;

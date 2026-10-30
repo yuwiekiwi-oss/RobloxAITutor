@@ -428,3 +428,6 @@ verify_jwt = false
 
 [functions.project]
 verify_jwt = true
+
+[functions.accounts]
+verify_jwt = true

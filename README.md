@@ -50,7 +50,7 @@ cp supabase/functions/.env.example supabase/functions/.env
 npx supabase secrets set --env-file supabase/functions/.env
 ```
 ```bash
-npx supabase functions deploy tutor end-session project
+npx supabase functions deploy tutor end-session project accounts
 ```
 OpenAI API Key は Edge Function の Secret にだけ置かれ、ブラウザには一切渡りません。
 

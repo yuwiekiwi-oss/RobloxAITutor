@@ -17,6 +17,8 @@ export type {
   StudentScript,
   WriteResult,
   TweakResult,
+  AccountRow,
+  AccountsList,
   QuizResult,
   CodeQuiz,
   EndSessionRequest,
@@ -33,7 +35,7 @@ export type {
   TutorResponse,
   UnderstandingCheck,
 } from "@contracts";
-export { BLANK_TOKEN, LIMITS } from "@contracts";
+export { BLANK_TOKEN, LIMITS, PASSWORD_MIN } from "@contracts";
 
 export type Role = "student" | "teacher" | "parent";
 

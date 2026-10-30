@@ -1,5 +1,6 @@
 // In-memory backend for the dev preview (#/preview). Never shipped to production.
 import type { Api } from "../lib/api";
+import { PASSWORD_MIN } from "../lib/types";
 import { projectApi, seedTeacherProjects } from "./mockProjects";
 import type {
   Lesson,
@@ -9,6 +10,7 @@ import type {
   Profile,
   QuizAttempt,
   SavedTree,
+  AccountRow,
   TutorMeta,
 } from "../lib/types";
 
@@ -151,12 +153,35 @@ const savedTrees: SavedTree[] = [
   },
 ];
 
+// Accounts the preview teacher (an admin) can manage.
+const LOGIN_IDS: Record<string, string> = { t1: "yamada", t2: "sasaki", s1: "tanaka", s2: "sato", s3: "suzuki", s4: "takahashi", s5: "ito" };
+const accounts: Omit<AccountRow, "is_self">[] = [
+  { id: "t1", role: "teacher", display_name: "山田先生", login_id: LOGIN_IDS.t1, is_admin: true, teacher_name: null },
+  { id: "t2", role: "teacher", display_name: "佐々木先生", login_id: LOGIN_IDS.t2, is_admin: false, teacher_name: null },
+  ...students.map((st) => ({ id: st.id, role: "student" as const, display_name: st.display_name, login_id: LOGIN_IDS[st.id], is_admin: false, teacher_name: "山田先生" })),
+];
+
 export function createMockApi(): Api {
   seedTeacherProjectsOnce();
   const { projectsForSessions, ...projectMethods } = projectApi((sid) => sessions.find((x) => x.id === sid));
   return {
     ...projectMethods,
     async listLessons() { return [trial]; },
+    async listAccounts() {
+      await wait(300);
+      return { accounts: accounts.map((a) => ({ ...a, is_self: a.id === teacher.id })), isAdmin: true };
+    },
+    async setPassword(userId, password) {
+      await wait(400);
+      if (password.length < PASSWORD_MIN) throw new Error(`パスワードは${PASSWORD_MIN}〜72文字にしてください。`);
+      if (!accounts.some((a) => a.id === userId)) throw new Error("このアカウントは変えられません。");
+    },
+    async setAdmin(userId, isAdmin) {
+      await wait(250);
+      const a = accounts.find((x) => x.id === userId)!;
+      if (!isAdmin && a.is_admin && accounts.filter((x) => x.is_admin).length <= 1) throw new Error("管理者が1人もいなくなるので外せません。");
+      a.is_admin = isAdmin;
+    },
     async listSavedTrees() {
       return [...savedTrees].sort((a, b) => b.last_used_at.localeCompare(a.last_used_at)).slice(0, 6);
     },

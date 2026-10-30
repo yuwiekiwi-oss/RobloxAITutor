@@ -62,6 +62,8 @@ async function upsertAccount(entry, role, teacherId = null) {
     role,
     display_name: entry.name,
     teacher_id: role === "student" ? teacherId : null,
+    // "admin": true in users.json makes a teacher an admin (an existing admin is never demoted here).
+    ...(role === "teacher" && entry.admin === true ? { is_admin: true } : {}),
   });
   if (error) throw new Error(`${entry.login}: ${error.message}`);
   idByLogin.set(entry.login, user.id);

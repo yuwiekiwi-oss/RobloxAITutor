@@ -22,6 +22,7 @@ import type {
   Profile,
   QuizAttempt,
   SavedTree,
+  AccountsList,
   TutorRequest,
   TutorResponse,
 } from "./types";
@@ -87,6 +88,11 @@ export interface Api {
   listSavedTrees(): Promise<SavedTree[]>;
   saveTree(tree: string, place: string | null): Promise<SavedTree>;
   deleteSavedTree(id: string): Promise<void>;
+
+  // Account management (teachers): own students; admins: everyone
+  listAccounts(): Promise<AccountsList>;
+  setPassword(userId: string, password: string): Promise<void>;
+  setAdmin(userId: string, isAdmin: boolean): Promise<void>;
 }
 
 export type PlanExtras = { images?: string[]; tree?: string | null };
